@@ -1,6 +1,7 @@
 package com.myapp;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
@@ -13,7 +14,18 @@ class VideoHandler {
 
     public VideoHandler() {
         try {
-            socket = new Socket("localhost", videoPort);
+            if(Datos.servidor)
+            {
+                System.out.println("Abriendo servidor");
+                ServerSocket serverSocket = new ServerSocket(videoPort);
+                socket = serverSocket.accept();
+                System.out.println("conexion con " + socket.getInetAddress().getHostName());
+            }
+            else
+            {
+                System.out.println("Buscando servidor");
+                socket = new Socket(Datos.ip, videoPort);
+            }
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {

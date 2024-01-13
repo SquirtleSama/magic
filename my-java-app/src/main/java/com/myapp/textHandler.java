@@ -1,6 +1,7 @@
 package com.myapp;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 class TextHandler {
@@ -11,7 +12,18 @@ class TextHandler {
 
     public TextHandler() {
         try {
-            socket = new Socket("localhost", textPort);
+            if(Datos.servidor)
+            {
+                System.out.println("Abriendo servidor");
+                ServerSocket serverSocket = new ServerSocket(textPort);
+                socket = serverSocket.accept();
+                System.out.println("conexion con " + socket.getInetAddress().getHostName());
+            }
+            else
+            {
+                System.out.println("Buscando servidor");
+                socket = new Socket(Datos.ip, textPort);
+            }
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {

@@ -16,7 +16,7 @@ public class InterfazCartas implements ActionListener {
     //Tendrá un panel de imagenes, 2 botones para desplazarse entre las cartas y un número que indique qué número es la carta actual.
     //Además, tendrá un botón para borrar todas las cartas de memoria.
     int posicionActual;
-    String rutaCarpeta = "src/main/cartas";
+    String rutaCarpeta = "my-java-app/src/main/cartas";
     File carpeta;
     String[] cartas;
     JLabel etiquetaImagen, etiquetaPosicion;
