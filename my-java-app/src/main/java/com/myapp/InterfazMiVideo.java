@@ -19,8 +19,13 @@ public class InterfazMiVideo {
     private JButton captureButton;
     private Webcam webcam;
     private BufferedImage recorte;
+    private TCPHandler envioTexto, envioVideo;
 
-    public InterfazMiVideo() {
+    EnvioAzure envioAzure;
+
+    public InterfazMiVideo(TCPHandler envioTexto, TCPHandler envioVideo) {
+        this.envioTexto = envioTexto;
+        this.envioVideo = envioVideo;
         frame = new JFrame("Video Interface");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(Datos.resolucion);
@@ -33,10 +38,12 @@ public class InterfazMiVideo {
             BufferedImage image = webcam.getImage();
             // Recorta la esquina superior izquierda de la imagen
             recorte = image.getSubimage(0, 0, image.getWidth() / 2, image.getHeight() / 2);
-            // Guarda la imagen en un archivo en la carpeta de fotos. 
+            // Envía la imagen a Azure
+            
             try {
-                File f = new File("src/main/cartas/foto.png");
-                ImageIO.write(recorte, "PNG", f);
+                File f = new File("MyFile.jpg");
+                ImageIO.write(recorte, "jpg", f);
+                
             } catch (IOException ex) {
                 System.out.println("Error al guardar la imagen: " + ex.getMessage());
             }
@@ -68,13 +75,6 @@ public class InterfazMiVideo {
         frame.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new InterfazMiVideo());
-    }
-
-    public static void main() {
-        SwingUtilities.invokeLater(() -> new InterfazMiVideo());
-    }
 
 
 }

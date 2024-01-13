@@ -12,23 +12,34 @@ public class TCPHandler {
     private ServerSocket serverSocket;
     short conn_state = 0;
     short time_out = 10;
-    String ip = Datos.videochat_ip;
-    int port = Datos.videochat_port;
-    boolean servidor = true;
+    boolean servidor = Datos.servidor;
     DataOutputStream out;
     DataInputStream in;
+    int tipo;
 
-    protected void conectar(){
+
+    protected void inicializar(int tipo){
+        if (tipo == Datos.Tipo.CHAT) {
+            conectar(Datos.chat_port);
+            this.tipo = tipo;
+        }
+        else if (tipo == Datos.Tipo.VIDEO) {
+            conectar(Datos.video_port);
+        }
+        this.tipo = tipo;
+    }
+
+    protected void conectar(int puerto){
         //Se va a conectar con la ip que corresponda.
         try {
             if (servidor) {
                 System.out.println("Abriendo el socket. . .");
-                serverSocket = new ServerSocket(port);
+                serverSocket = new ServerSocket(puerto);
                 socket = serverSocket.accept();
             }
             else {
                 System.out.println("Abriendo el socket. . .");
-                socket = new Socket(ip, port);
+                socket = new Socket(Datos.ip, puerto);
             }
             conn_state = 1;
             in = new DataInputStream(socket.getInputStream());

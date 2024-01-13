@@ -1,21 +1,14 @@
 package com.myapp;
-
 import java.awt.Dimension;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class Datos {
-    //Datos del servidor que nos pondrá en contacto
-    //En principio no lo voy a usar
-        static String server_ip = "192.168.1.64";
-        static int server_port = 8080;
-        static String peticion = server_ip + ":" + server_port + "/Carrera/rest/ms";
 	//Si es servidor o no
         static boolean servidor = true;
+	//Si no es servidor, la ip del servidor
+		static String ip = "";
     //Puerto de conexión
-	    static int videochat_port = 5550;
-	//Datos del chat
-	    static Queue<String> chat_queue =  new LinkedList<>();
+	    static int video_port = 5550;
+		static int chat_port = 5551;
 	//Datos de las cartas
 	
 	//Datos del video
@@ -23,10 +16,12 @@ public class Datos {
 	static int frameWidth = 1280;
 	static int frameHeight = 720;
 	static Dimension resolucion = new Dimension(frameWidth, frameHeight);
-	
-	//Datos de pruebas
-	static boolean probando = true;
-	static String videochat_ip = "192.168.1.64";
+
+	public class Tipo
+	{
+		static final int VIDEO = 1;
+		static final int CHAT = 2;
+	}
 
 	
 	public class Head

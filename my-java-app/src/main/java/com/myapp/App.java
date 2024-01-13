@@ -9,6 +9,12 @@ package com.myapp;
 
 public class App {
     public static void main(String[] args) {
+        //Inicializo los dos sockets que mandan y reciben video y texto
+        BuscadorCartas.buscar("island", 0);
+        
+        InterfazCartas interfazCartas = new InterfazCartas();
+
+
         //System.out.println("EJECUTANDO INTERFAZ DE CARTAS");
         //InterfazCartas i = new InterfazCartas();
         //System.out.println("EJECUTANDO INTERFAZ DE MI VIDEO");

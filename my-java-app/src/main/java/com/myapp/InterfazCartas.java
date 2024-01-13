@@ -21,6 +21,7 @@ public class InterfazCartas implements ActionListener {
     String[] cartas;
     JLabel etiquetaImagen, etiquetaPosicion;
     JButton menosButton, masButton, borrarButton;
+    BuscadorCartas buscadorCartas;
 
 
     public InterfazCartas()
@@ -28,6 +29,7 @@ public class InterfazCartas implements ActionListener {
         posicionActual = 0;
         carpeta = new File(rutaCarpeta);
         cartas = carpeta.list();
+        buscadorCartas = new BuscadorCartas();
 
         //Configuracion de la etiqueta de la imagen y posicion
         etiquetaImagen = new JLabel();
@@ -68,9 +70,10 @@ public class InterfazCartas implements ActionListener {
 
     }
 
-    public void addCarta()
+    public void addCarta(String nombreCarta)
     {
         //Añade una carta a la carpeta de cartas
+        buscadorCartas.buscar(nombreCarta, posicionActual);
         cartas = carpeta.list();
         etiquetaPosicion.setText((posicionActual + 1) + "/" + cartas.length);
     }
@@ -85,7 +88,7 @@ public class InterfazCartas implements ActionListener {
                 File f = new File(rutaCarpeta + "/" + cartas[i]);
                 f.delete();
             }
-            // Igual hay que descargar una tierra o algo para que la carpeta no esté vacía y se rompa
+            buscadorCartas.buscar("island", 0);
             cartas = carpeta.list();
             etiquetaPosicion.setText((posicionActual + 1) + "/" + cartas.length);
         }

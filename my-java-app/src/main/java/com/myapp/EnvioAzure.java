@@ -1,57 +1,111 @@
 package com.myapp;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.http.HttpResponse;
-
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.io.*;
+import java.net.URI;
 
-public class EnvioAzure {
-    final static String subscriptionKey = "3044375f169f4383aa59e662b65820a8";
-    final static String endpoint = "https://westeurope.api.cognitive.microsoft.com/";
-    final static String uriBase = endpoint + "vision/v3.2/read/analyze?language=en&model-version=latest";
+public class EnvioAzure
+{
+    static String subscriptionKey = "626cc768808249dda4b6e6febbcd64e8";
+    static String endpoint = "https://westeurope.api.cognitive.microsoft.com/";
+
+    TextHandler envioTexto;
 
 
-    public static void main(String[] args) {
-        // Aquí puedes comenzar a escribir tu código
+
+    public EnvioAzure(TextHandler textHandler){
+        this.envioTexto = textHandler;
     }
 
-    public EnvioAzure() {}
 
-//Enviar una imagen
-    public static void enviarImagen(BufferedImage image) throws UnsupportedEncodingException {
-        try {
-            URIBuilder uriBuilder = new URIBuilder(uriBase);
-            URI uri = uriBuilder.build();
+    public void buscar(){
+        String urlResultados = enviarImagen();
+        String nombreCarta = recibirResultados(urlResultados);
+        if (nombreCarta != null) {
+            //Enviar nombreCarta al otro jugador.
+            envioTexto.enviarTexto(nombreCarta);
+            
+        }
+    }
+
+
+    private static String enviarImagen() {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        try{
+            URIBuilder builder = new URIBuilder(endpoint + "vision/v3.2/read/analyze?language=en&model-version=latest");
+            URI uri = builder.build();
             HttpPost request = new HttpPost(uri);
-            request.setHeader("Content-Type", "application/json");
-            request.setHeader("Ocp-Apim-Subscription-Key","´" +  subscriptionKey + "}");
+            request.setHeader("Content-Type", "application/octet-stream");
+            request.setHeader("Ocp-Apim-Subscription-Key",  subscriptionKey);
 
-            StringEntity reqEntity = new StringEntity("{'url':'https://cards.scryfall.io/normal/front/c/4/c4e319d7-53f3-40e8-9a75-fe1fd8716733.jpg?1562870478'}");
+            //Pasar la imagen
+            File f = new File("MyFile.jpg");
+            FileEntity reqEntity = new FileEntity(f);
             request.setEntity(reqEntity);
 
-            CloseableHttpClient httpclient = HttpClients.createDefault();
-            HttpResponse response = httpclient.execute(request);
+            HttpResponse response = httpClient.execute(request);
             HttpEntity entity = response.getEntity();
 
             if (entity != null)
             {
                 System.out.println(EntityUtils.toString(entity));
             }
-
-            
-            
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            String urlResultado = response.getFirstHeader("Operation-Location").getValue();
+            System.out.println(urlResultado);
+            return urlResultado;
+        }catch(Exception e){
+            System.out.println("Error al crear el cliente");
         }
+        return null;
+    }
+
+    private static String recibirResultados(String urlResultados){
+        System.out.println(urlResultados);
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        try{
+            URIBuilder builder = new URIBuilder(urlResultados);
+            URI uri = builder.build();
+            HttpGet request= new HttpGet(uri);
+            request.setHeader("Ocp-Apim-Subscription-Key",  subscriptionKey);
+
+            HttpResponse response = httpClient.execute(request);
+            HttpEntity entity = response.getEntity();
+            String jsonString = EntityUtils.toString(entity);
+            System.out.println(jsonString);
+            JSONObject jsonObject = new JSONObject(jsonString);
+            while(!jsonObject.getString("status").equals("succeeded"))
+            {
+                Thread.sleep(250);
+                response = httpClient.execute(request);
+                entity = response.getEntity();
+                jsonString = EntityUtils.toString(entity);
+                jsonObject = new JSONObject(jsonString);
+                System.out.println(jsonObject);
+            }
+            jsonObject = jsonObject.getJSONObject("analyzeResult");
+            JSONArray jsonArray = jsonObject.getJSONArray("readResults");
+            jsonObject = (JSONObject) jsonArray.get(0);
+            jsonArray = jsonObject.getJSONArray("lines");
+
+            jsonObject = (JSONObject) jsonArray.get(0);
+            String nombreCarta = jsonObject.getString("text");
+            System.out.println(nombreCarta);
+            return nombreCarta;
+        }
+        catch(Exception e){
+            System.out.println("Error al crear el cliente");
+        }
+        
+        return null;
     }
 
 
