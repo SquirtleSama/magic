@@ -107,10 +107,4 @@ public class InterfazVideos {
     }
 
 
-
-
-
-    public static void main(String[] args) {
-        InterfazVideos interfazVideos = new InterfazVideos();
-    }
 }

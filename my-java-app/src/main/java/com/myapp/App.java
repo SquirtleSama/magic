@@ -12,8 +12,8 @@ public class App {
         //Inicializo los dos sockets que mandan y reciben video y texto
         //BuscadorCartas.buscar("island", 0);
         
-        //InterfazVideos interfazVideos = new InterfazVideos();
-        TextHandler textHandler = new TextHandler();
+        InterfazVideos interfazVideos = new InterfazVideos();
+        //TextHandler textHandler = new TextHandler();
 
         //System.out.println("EJECUTANDO INTERFAZ DE CARTAS");
         //InterfazCartas i = new InterfazCartas();

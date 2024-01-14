@@ -3,9 +3,9 @@ import java.awt.Dimension;
 
 public class Datos {
 	//Si es servidor o no
-        static boolean servidor = true;
+        static boolean servidor = false;
 	//Si no es servidor, la ip del servidor
-		static String ip = "";
+		static String ip = "192.168.1.130";
     //Puerto de conexión
 	    static int video_port = 5550;
 		static int chat_port = 5551;
