@@ -21,6 +21,7 @@ public class InterfazVideos {
     private VideoHandler videoHandler;
     private InterfazCartas interfazCartas;
     private EnvioAzure envioAzure;
+    private int contador = 0;
 
     public InterfazVideos() {
         textHandler = new TextHandler();
@@ -75,19 +76,25 @@ public class InterfazVideos {
         new Thread(() -> {
             while (true) {
                 videoHandler.sendVideo(webcam.getImage());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
         }).start();
 
         // Hilo para recibir el video
         new Thread(() -> {
-            while (true) {
                 // Recibir el video
+                System.out.println("----" + contador++);
                 BufferedImage receivedVideo = videoHandler.recibirImagen();
                 if (receivedVideo != null) {
                     // Mostrar el video recibido en InterfazVideos
                     imageLabel.setIcon(new ImageIcon(receivedVideo));
+                    System.out.println("        ----");
                 }
-            }
         }).start();
 
         // Hilo para recibir texto
