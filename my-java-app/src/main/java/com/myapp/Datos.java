@@ -3,7 +3,7 @@ import java.awt.Dimension;
 
 public class Datos {
 	//Si es servidor o no
-        static boolean servidor = false;
+        static boolean servidor = true;
 	//Si no es servidor, la ip del servidor
 		static String ip = "192.168.1.130";
     //Puerto de conexión
