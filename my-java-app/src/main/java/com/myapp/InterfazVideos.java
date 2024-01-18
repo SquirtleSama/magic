@@ -76,12 +76,6 @@ public class InterfazVideos {
         new Thread(() -> {
             while (true) {
                 videoHandler.sendVideo(webcam.getImage());
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
             }
         }).start();
 
@@ -89,10 +83,10 @@ public class InterfazVideos {
         new Thread(() -> {
                 // Recibir el video
                 System.out.println("----" + contador++);
-                BufferedImage receivedVideo = videoHandler.recibirImagen();
-                if (receivedVideo != null) {
+                BufferedImage imagenRecibida = videoHandler.recibirImagen();
+                if (imagenRecibida != null) {
                     // Mostrar el video recibido en InterfazVideos
-                    imageLabel.setIcon(new ImageIcon(receivedVideo));
+                    imageLabel.setIcon(new ImageIcon(imagenRecibida));
                     System.out.println("        ----");
                 }
         }).start();

@@ -56,19 +56,21 @@ class VideoHandler {
 
     public BufferedImage recibirImagen() {
         
-        while(true){
+       // while(true){
             try {
                 int length = in.readInt();
                 byte[] imagenBytes = new byte[length];
                 in.readFully(imagenBytes, 0, length);
-                BufferedImage imagenRecibida = ImageIO.read(new ByteArrayInputStream(imagenBytes));
+                ByteArrayInputStream bais = new ByteArrayInputStream(imagenBytes);
+                BufferedImage imagenRecibida = ImageIO.read(bais);
             if (imagenRecibida != null) {
                 return imagenRecibida;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    //}
+    return null;
     }
     
 }
